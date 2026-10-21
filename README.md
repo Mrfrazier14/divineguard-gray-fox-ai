@@ -34,6 +34,12 @@ Before exposing it through SaaS: build an authenticated backend, derive tenant i
 
 Official API references: [Anthropic Python SDK](https://platform.claude.com/docs/en/api/sdks/python), [OpenAI Python SDK](https://github.com/openai/openai-python).
 
+## Unified Gray Fox AI desktop workspace
+
+The macOS wrapper in `desktop/` presents one local conversation workspace with a provider selector for the OpenAI API (ChatGPT models) or Anthropic API (Claude models), original work modes for coding, code review, GovCon, business planning and creator work, local chat history, prompt drafts and backup export. Its gray canvas, charcoal sidebar and orange controls match the GovCon Pulse palette. Each request uses the selected provider's API key and an enabled model ID; the key is cleared from the form and is not written into the local workspace. ChatGPT and Claude subscriptions do not include API usage. The app sends up to 12 recent user/assistant messages for a turn, with a 2,048-token output ceiling.
+
+This is a provider-connected assistant, not a copy of ChatGPT or Claude. It does not import their private tools, hidden instructions, account memory, subscriptions, browsing, or code-execution environments. The browser preview does not make provider requests. The current macOS shell has not been updated into a Windows build, and live API access still requires the owner's own provider credentials and billing.
+
 ## Repository family
 
 | Repository | Responsibility |

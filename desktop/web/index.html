@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <title>Gray Fox AI · DivineGuard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside>
+    <div class="brand"><span class="mark">GF</span><b>Gray Fox AI</b></div>
+    <p>One workspace for coding, GovCon, business planning, and creator work.</p>
+    <button id="new-chat" class="secondary">＋ New conversation</button>
+    <a href="https://github.com/Mrfrazier14/divineguard-gray-fox-ai">Source & setup guide ↗</a>
+    <div class="foot"><p>Provider choice stays yours.<br>Review every generated answer.</p></div>
+  </aside>
+  <main>
+    <div class="top"><span class="tag">DIVINEGUARD · PERSONAL AI WORKSPACE</span><span class="pill" id="storage">Loading workspace</span></div>
+    <h1>Your AI workspace, built around your work.</h1>
+    <p class="lede">Use OpenAI or Claude through their APIs in one original assistant. Choose a work mode, keep a local conversation, and switch providers when you want another perspective.</p>
+    <div role="status" aria-live="polite" id="message"></div>
+    <div class="layout">
+      <section class="panel composer-panel">
+        <div class="fields">
+          <div><label for="skill">Work mode</label><select id="skill">
+            <option value="general">General assistant</option>
+            <option value="coding">Coding coach</option>
+            <option value="review">Code review & debugging</option>
+            <option value="govcon">GovCon proposal prep</option>
+            <option value="business">Business & automation planning</option>
+            <option value="creator">Creator studio</option>
+          </select></div>
+          <div><label for="provider">Model provider</label><select id="provider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic · Claude</option></select></div>
+        </div>
+        <label for="prompt">What would you like help with?</label>
+        <textarea id="prompt" maxlength="12000" placeholder="Ask a question, describe a feature, paste non-sensitive code, or outline a task…"></textarea>
+        <details class="credentials">
+          <summary>Connection for this request</summary>
+          <label for="model">Model ID enabled in your provider account</label>
+          <input id="model" maxlength="200" autocomplete="off" placeholder="Enter the model ID shown in your account">
+          <label for="key">API key</label>
+          <input id="key" type="password" autocomplete="off" placeholder="Used for this request only">
+          <p class="note">The key is cleared from the form after sending and is not saved. Provider API usage can cost extra; ChatGPT and Claude subscriptions do not include API charges.</p>
+        </details>
+        <div class="toolbar"><button id="generate" class="primary">Send to selected provider ↗</button><button id="save-draft" class="secondary">Save prompt draft</button><button id="clear-chat" class="secondary">Clear conversation</button></div>
+        <p class="note">Only the selected provider receives this conversation when you send. Don’t enter passwords, sensitive procurement material, or customer data unless you have checked that you are allowed to share it.</p>
+      </section>
+      <section class="panel response-panel">
+        <div class="section-head"><h2>Conversation</h2><span id="turn-count" class="pill">0 messages</span></div>
+        <div id="chat" aria-live="polite" class="chat"><div class="empty">Choose a work mode and send your first message. Conversation history is stored on this device.</div></div>
+        <div id="web-note" class="notice" hidden>Browser preview only: provider requests are available in the installed Mac app.</div>
+      </section>
+    </div>
+    <footer><button id="export" class="secondary">Export local backup</button><p class="note">Gray Fox AI is an independent assistant. Its work modes are original prompts; they do not import ChatGPT or Claude proprietary tools or subscriptions.</p></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
