@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "divineguard-gray-fox-ai"
+version = "0.1.0"
+requires-python = ">=3.11"
+description = "DivineGuard starter implementation"
+
+[tool.setuptools.packages.find]
+include = ["pulse*", "grayfox*", "platform_core*"]
