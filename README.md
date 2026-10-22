@@ -72,3 +72,7 @@ Install this repository and `divineguard-govcon-pulse` into the same Python envi
 This loopback-only development workspace is not a production service. It has no customer accounts, tenant isolation, subscription billing, enforced per-customer spend limits or managed hosting. Do not expose it through a tunnel or public interface. The installed Mac app is not rebuilt by these source changes.
 
 The local connection panel verifies a provider with one short API request and retains the verified key only in server memory for 30 minutes. Disconnect clears those connections. The proposal studio constructs a prompt from authorized company facts and solicitation text, flags unknown facts through its instructions, and exports the latest assistant response as an explicitly unreviewed Markdown draft. AI output still requires human validation; this is not an automatic compliance certification or bid submission tool.
+
+
+## Provider connection link
+Open http://127.0.0.1:8787/#connections in the running local workspace. OpenAI and Anthropic connect directly; OpenRouter is an optional third-party gateway for additional model IDs. Each connection requires that service's API key and an enabled model. No live provider is verified until the test succeeds. OpenRouter routes to an underlying model provider; its privacy and billing terms apply. The app does not fall back to another service; OpenRouter provider fallbacks are disabled. The OpenRouter option is supported in this local browser implementation, not the existing installed Mac binary.

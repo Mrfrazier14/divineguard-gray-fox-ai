@@ -12,13 +12,13 @@
     <div class="brand"><span class="mark">GF</span><b>Gray Fox AI</b></div>
     <p>One workspace for coding, GovCon, business planning, and creator work.</p>
     <button id="new-chat" class="secondary">＋ New conversation</button>
-    <a href="https://github.com/Mrfrazier14/divineguard-gray-fox-ai">Source & setup guide ↗</a>
+    <a href="#connections">Connect providers ↗</a><a href="https://github.com/Mrfrazier14/divineguard-gray-fox-ai">Source & setup guide ↗</a>
     <div class="foot"><p>Provider choice stays yours.<br>Review every generated answer.</p></div>
   </aside>
   <main>
     <div class="top"><span class="tag">DIVINEGUARD · PERSONAL AI WORKSPACE</span><span class="pill" id="storage">Loading workspace</span></div>
     <h1>Your AI workspace, built around your work.</h1>
-    <p class="lede">Use OpenAI or Claude through their APIs in one original assistant. Choose a work mode, keep a local conversation, and switch providers when you want another perspective.</p>
+    <p class="lede">Use OpenAI, Claude or additional models through OpenRouter in one original assistant. Choose a work mode, keep a local conversation, and switch providers when you want another perspective.</p>
     <div role="status" aria-live="polite" id="message"></div>
     <div class="layout">
       <section class="panel composer-panel">
@@ -31,13 +31,13 @@
             <option value="business">Business & automation planning</option>
             <option value="creator">Creator studio</option>
           </select></div>
-          <div><label for="provider">Model provider</label><select id="provider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic · Claude</option></select></div>
+          <div><label for="provider">Model provider</label><select id="provider"><option value="openai">OpenAI</option><option value="anthropic">Anthropic · Claude</option><option value="openrouter">OpenRouter · additional models</option></select></div>
         </div>
         <label for="prompt">What would you like help with?</label>
         <textarea id="prompt" maxlength="12000" placeholder="Ask a question, describe a feature, paste non-sensitive code, or outline a task…"></textarea>
-        <details class="credentials">
+        <details class="credentials" id="connections">
           <summary>Connection for this request</summary>
-          <label for="model">Model ID enabled in your provider account</label>
+          <p>Provider setup: <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI API keys</a> · <a href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener noreferrer">Claude API keys</a> · <a href="https://openrouter.ai/settings/keys" target="_blank" rel="noopener noreferrer">OpenRouter API keys</a></p><p class="note">OpenRouter is a separate service: it and the underlying selected model provider receive requests when selected. Review their privacy and billing terms. No cross-service fallback is performed by this app.</p><label for="model">Model ID enabled in your provider account</label>
           <input id="model" maxlength="200" autocomplete="off" placeholder="Enter the model ID shown in your account">
           <label for="key">API key</label>
           <input id="key" type="password" autocomplete="off" placeholder="Used for this request only">

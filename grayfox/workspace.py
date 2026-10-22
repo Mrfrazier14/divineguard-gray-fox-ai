@@ -20,7 +20,7 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, *args): pass
     def reply(self, code, data):
         raw=json.dumps(data).encode(); self.send_response(code)
-        self.send_header('Content-Type','application/json'); self.send_header('Cache-Control','no-store')
+        self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(raw))); self.send_header('Cache-Control','no-store')
         self.send_header('X-Content-Type-Options','nosniff'); self.end_headers();self.wfile.write(raw)
     def trusted(self): return self.headers.get('Host') == f'127.0.0.1:{self.server.server_port}'
     def do_GET(self):
@@ -51,7 +51,7 @@ class Handler(BaseHTTPRequestHandler):
             path=urlsplit(self.path).path
             if path=='/api/connections':
                 provider=data.get('provider');key=data.get('key');model=data.get('model')
-                if provider not in ('openai','anthropic') or not isinstance(key,str) or not 1<=len(key)<=1000 or not isinstance(model,str) or not 1<=len(model)<=200:
+                if provider not in ('openai','anthropic','openrouter') or not isinstance(key,str) or not 1<=len(key)<=1000 or not isinstance(model,str) or not 1<=len(model)<=200:
                     raise ValueError('Enter a provider key and enabled model')
                 generate('Reply with only CONNECTED.',provider=provider,environ={provider.upper()+'_API_KEY':key,provider.upper()+'_MODEL':model},max_tokens=32)
                 CONNECTIONS[provider]={'key':key,'model':model,'saved':time.monotonic()}
@@ -61,7 +61,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(200,{'connections':{}})
             if path=='/api/generate':
                 provider=data.get('provider')
-                if provider not in ('openai','anthropic'): raise ValueError('Select a provider')
+                if provider not in ('openai','anthropic','openrouter'): raise ValueError('Select a provider')
                 active_connections()
                 key=data.get('key','');model=data.get('model','');messages=data.get('messages',[])
                 if not key and provider in CONNECTIONS:

@@ -16,6 +16,13 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(generate('hi', 'openai', client, {'OPENAI_MODEL':'test'}), 'Hello')
         client.responses.create.assert_called_once_with(model='test', input='hi', max_output_tokens=512, store=False)
 
+    def test_openrouter_explicit_route(self):
+        client = Mock()
+        client.chat.completions.create.return_value = NS(choices=[NS(message=NS(content='Router response'))])
+        self.assertEqual(generate('hi','openrouter',client,{'OPENROUTER_MODEL':'test-model'}),'Router response')
+        self.assertEqual(client.chat.completions.create.call_args.kwargs['extra_body'],{'provider':{'allow_fallbacks':False}})
+        client.responses.create.assert_not_called()
+
     def test_configuration(self):
         with self.assertRaises(ConfigurationError):
             generate('hi', 'unknown', environ={})

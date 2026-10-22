@@ -9,8 +9,8 @@ class ProviderError(RuntimeError):
 def generate(prompt, provider=None, client=None, environ=None, max_tokens=512):
     env = os.environ if environ is None else environ
     provider = provider or env.get('AI_PROVIDER', 'anthropic')
-    if provider not in ('anthropic', 'openai'):
-        raise ConfigurationError('AI_PROVIDER must be anthropic or openai')
+    if provider not in ('anthropic', 'openai', 'openrouter'):
+        raise ConfigurationError('AI_PROVIDER must be anthropic, openai or openrouter')
     if not isinstance(prompt, str) or not prompt.strip() or len(prompt) > 12000:
         raise ValueError('Prompt must contain 1-12000 characters')
     if type(max_tokens) is not int or not 1 <= max_tokens <= 2048:
@@ -31,6 +31,13 @@ def generate(prompt, provider=None, client=None, environ=None, max_tokens=512):
             response = client.messages.create(model=model, max_tokens=max_tokens,
                 messages=[{'role': 'user', 'content': prompt}])
             text = ''.join(block.text for block in response.content if block.type == 'text')
+        elif provider == 'openrouter':
+            if client is None:
+                from openai import OpenAI
+                with OpenAI(api_key=key, base_url='https://openrouter.ai/api/v1', timeout=30.0, max_retries=0) as sdk:
+                    return generate(prompt, provider, sdk, env, max_tokens)
+            response = client.chat.completions.create(model=model, messages=[{'role':'user','content':prompt}], max_tokens=max_tokens, extra_body={'provider':{'allow_fallbacks':False}})
+            text = response.choices[0].message.content
         else:
             if client is None:
                 from openai import OpenAI
