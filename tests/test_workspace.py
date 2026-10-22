@@ -14,6 +14,16 @@ class WorkspaceTests(unittest.TestCase):
   self.server.shutdown();self.thread.join();self.server.server_close();self.db.stop();self.tmp.cleanup()
  def post(self,path,data,origin=None):
   c=HTTPConnection('127.0.0.1',self.port);c.request('POST',path,json.dumps(data),{'Content-Type':'application/json','Origin':origin or f'http://127.0.0.1:{self.port}','X-Workspace-Token':w.TOKEN});r=c.getresponse();status=r.status;body=json.loads(r.read());c.close();return status,body
+ def test_verified_connection_is_redacted_and_disconnects(self):
+  with patch.object(w,'generate',return_value='CONNECTED'):
+   status,data=self.post('/api/connections',{'provider':'anthropic','key':'secret-test-only','model':'test-model'})
+   self.assertEqual(status,200);self.assertNotIn('secret-test-only',json.dumps(data))
+   status,data=self.post('/api/generate',{'provider':'anthropic','messages':[{'role':'user','content':'Test connected provider'}]})
+   self.assertEqual(status,200)
+   self.post('/api/disconnect',{});self.assertEqual(w.CONNECTIONS,{})
+ def test_connection_expiration(self):
+  w.CONNECTIONS['openai']={'key':'test-only','model':'test-model','saved':0}
+  self.assertEqual(w.active_connections(),{})
  def test_rejects_foreign_origin(self):
   status,_=self.post('/api/opportunities',{'action':'add','title':'x','url':'https://sam.gov/'},'https://example.com');self.assertEqual(status,403)
  def test_persistence_and_evidence_gate(self):

@@ -1,5 +1,5 @@
 """Loopback-only combined workspace. Not a multi-tenant production server."""
-import json, os, secrets
+import json, os, secrets, time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -7,7 +7,15 @@ from grayfox.service import generate, ConfigurationError, ProviderError
 from pulse.store import Store
 WEB = Path(__file__).resolve().parents[1] / 'desktop/web'
 TOKEN = secrets.token_urlsafe(32)
-DB = os.environ.get('PULSE_DB', str(Path.home() / 'Library/Application Support/DivineGuard Workspace/pulse.db'))
+CONNECTIONS = {}
+CONNECTION_TTL = 1800
+def active_connections():
+    for provider in list(CONNECTIONS):
+        if time.monotonic() - CONNECTIONS[provider]['saved'] >= CONNECTION_TTL:
+            del CONNECTIONS[provider]
+    return {provider: {'model': value['model'], 'verified': True} for provider,value in CONNECTIONS.items()}
+DATA_ROOT = Path(os.environ.get('LOCALAPPDATA', str(Path.home() / 'AppData/Local'))) / 'DivineGuard Workspace' if os.name == 'nt' else Path.home() / 'Library/Application Support/DivineGuard Workspace'
+DB = os.environ.get('PULSE_DB', str(DATA_ROOT / 'pulse.db'))
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *args): pass
     def reply(self, code, data):
@@ -18,12 +26,13 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.trusted(): return self.reply(403, {'error':'Invalid local host'})
         path=urlsplit(self.path).path
+        if path=='/api/connections': return self.reply(200, {'connections':active_connections()})
         if path=='/api/session': return self.reply(200, {'token':TOKEN,'mode':'local-test'})
         if path=='/api/opportunities':
             store=Store(DB)
             try: return self.reply(200, {'records':store.list()})
             finally: store.close()
-        files={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/pulse.js':'pulse.js'}
+        files={'/':'index.html','/index.html':'index.html','/app.js':'app.js','/style.css':'style.css','/pulse.js':'pulse.js','/proposal.js':'proposal.js'}
         if path not in files: return self.reply(404, {'error':'Not found'})
         data=(WEB/files[path]).read_bytes();self.send_response(200)
         self.send_header('Content-Type',{'html':'text/html','js':'text/javascript','css':'text/css'}[files[path].split('.')[-1]])
@@ -40,10 +49,23 @@ class Handler(BaseHTTPRequestHandler):
             data=json.loads(self.rfile.read(size))
             if not isinstance(data,dict): raise ValueError('Invalid request')
             path=urlsplit(self.path).path
+            if path=='/api/connections':
+                provider=data.get('provider');key=data.get('key');model=data.get('model')
+                if provider not in ('openai','anthropic') or not isinstance(key,str) or not 1<=len(key)<=1000 or not isinstance(model,str) or not 1<=len(model)<=200:
+                    raise ValueError('Enter a provider key and enabled model')
+                generate('Reply with only CONNECTED.',provider=provider,environ={provider.upper()+'_API_KEY':key,provider.upper()+'_MODEL':model},max_tokens=32)
+                CONNECTIONS[provider]={'key':key,'model':model,'saved':time.monotonic()}
+                return self.reply(200,{'connections':active_connections()})
+            if path=='/api/disconnect':
+                CONNECTIONS.clear()
+                return self.reply(200,{'connections':{}})
             if path=='/api/generate':
                 provider=data.get('provider')
                 if provider not in ('openai','anthropic'): raise ValueError('Select a provider')
+                active_connections()
                 key=data.get('key','');model=data.get('model','');messages=data.get('messages',[])
+                if not key and provider in CONNECTIONS:
+                    key=CONNECTIONS[provider]['key'];model=CONNECTIONS[provider]['model']
                 if not isinstance(key,str) or not 1<=len(key)<=1000 or not isinstance(model,str) or not 1<=len(model)<=200: raise ValueError('Enter a key and model')
                 if not isinstance(messages,list) or not 1<=len(messages)<=12: raise ValueError('Invalid conversation')
                 turns=[]
