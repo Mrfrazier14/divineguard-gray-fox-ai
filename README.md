@@ -1,5 +1,7 @@
 # DivineGuard Gray Fox AI
 
+Gray Fox AI is a DivineGuard IT Services LLC product initiative, founded and created by Aaron Frazier Jr.
+
 A server-side Python integration starter with a common `generate()` interface for Anthropic Messages and OpenAI Responses. It includes a CLI, bounded input/output, explicit model selection, 30-second SDK timeouts, disabled automatic retries, sanitized failures and mock-based tests.
 
 ## Setup and use

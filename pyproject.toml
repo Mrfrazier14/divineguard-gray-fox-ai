@@ -7,6 +7,8 @@ name = "divineguard-gray-fox-ai"
 version = "0.1.0"
 requires-python = ">=3.11"
 description = "DivineGuard starter implementation"
+authors = [{name = "Aaron Frazier Jr."}]
+maintainers = [{name = "DivineGuard IT Services LLC", email = "AaronFrazier@DGITServices.onmicrosoft.com"}]
 
 [tool.setuptools.packages.find]
 include = ["pulse*", "grayfox*", "platform_core*"]
