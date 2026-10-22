@@ -64,3 +64,9 @@ python -m unittest discover -s tests -v
 GitHub Actions runs tests on Python 3.11 and 3.13. `.env`, local databases, virtual environments and AWS configuration are ignored. `.env.example` contains placeholders only. Never commit keys, credentials, customer data or bid evidence containing private information.
 
 Read [architecture](docs/ARCHITECTURE.md) for the future integration boundary. These are new starter implementations; they do not migrate the earlier desktop application or hosted pilot. No production readiness, live billing, bid submission or deployed AWS service is implied.
+
+
+## Combined local test workspace
+Install this repository and `divineguard-govcon-pulse` into the same Python environment, plus the pinned provider SDK requirements. Run `python -m grayfox.workspace` and open http://127.0.0.1:8787. The browser uses the same Gray Fox interface with an opportunity panel backed by Pulse SQLite storage. Provider credentials are supplied for each request and are never written to storage or logs. Conversation history remains browser-local; opportunity records use the local Pulse database. The combined prompt is limited to 12,000 characters.
+
+This loopback-only development workspace is not a production service. It has no customer accounts, tenant isolation, subscription billing, enforced per-customer spend limits or managed hosting. Do not expose it through a tunnel or public interface. The installed Mac app is not rebuilt by these source changes.

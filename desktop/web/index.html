@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'">
-  <title>Gray Fox AI · DivineGuard</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>DivineGuard Workspace · Gray Fox AI + GovCon Pulse</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -49,11 +49,11 @@
       <section class="panel response-panel">
         <div class="section-head"><h2>Conversation</h2><span id="turn-count" class="pill">0 messages</span></div>
         <div id="chat" aria-live="polite" class="chat"><div class="empty">Choose a work mode and send your first message. Conversation history is stored on this device.</div></div>
-        <div id="web-note" class="notice" hidden>Browser preview only: provider requests are available in the installed Mac app.</div>
+        <div id="web-note" class="notice" hidden>Local test workspace. Enter a key and enabled model for the selected provider. API charges apply.</div>
       </section>
     </div>
-    <footer><p class="note">Founded and created by Aaron Frazier Jr. · DivineGuard IT Services LLC</p><button id="export" class="secondary">Export local backup</button><p class="note">Gray Fox AI is an independent assistant. Its work modes are original prompts; they do not import ChatGPT or Claude proprietary tools or subscriptions.</p></footer>
+    <section class="panel" id="pulse-panel"><span class="tag">CONNECTED APP · GOVCON PULSE</span><h2>Opportunity workspace</h2><p>Save official links and evidence locally. Select “Prepare AI review” to copy a record into the composer; nothing is sent until you choose a provider and press Send.</p><label for="opp-title">Opportunity title</label><input id="opp-title" maxlength="500"><label for="opp-url">Official HTTPS source URL</label><input id="opp-url" type="url"><button id="opp-add" class="primary">Save opportunity</button><p id="opp-status" role="status"></p><div id="opp-list"></div></section><footer><p class="note">Founded and created by Aaron Frazier Jr. · DivineGuard IT Services LLC</p><button id="export" class="secondary">Export local backup</button><p class="note">Gray Fox AI is an independent assistant. Its work modes are original prompts; they do not import ChatGPT or Claude proprietary tools or subscriptions.</p></footer>
   </main>
-  <script src="app.js"></script>
+  <script src="app.js"></script><script src="pulse.js"></script>
 </body>
 </html>
